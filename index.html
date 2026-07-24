@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CCA-F — 3-Day Bilingual Exam Prep</title>
+<script>(function(){try{var t=localStorage.getItem('cca-theme');if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
 <link rel="stylesheet" href="assets/css/style.css">
 <noscript><style>.tab-panel{display:block !important;}</style></noscript>
 </head>
@@ -31,6 +32,7 @@
       <button type="button" class="tab-btn" data-tab="cheat">Cheat‑sheet</button>
       <button type="button" class="tab-btn" data-tab="checklist">Checklist</button>
       <label class="hint-toggle"><input type="checkbox" id="viToggle" checked> 🇻🇳 hints</label>
+      <label class="hint-toggle"><input type="checkbox" class="theme-toggle-input"> 🌙 Dark</label>
     </nav>
   </div>
 </header>
@@ -107,7 +109,7 @@
     <div class="domain-body">
       <div class="bigpic">
         <p class="cap">🗺️ <b>Big picture, from the source</b> — this is a faithful redraw of Anthropic's own published multi-agent Research architecture, not something invented from the quiz questions. Component names (LeadResearcher, Subagents, Memory, CitationAgent) are Anthropic's actual names. Click any number to jump to that principle below.</p>
-        <blockquote style="margin:0 0 12px;padding:10px 14px;border-left:3px solid var(--d1);background:#fff;font-size:0.82rem;color:var(--muted);font-style:italic;">"Our Research system uses a multi-agent architecture with an orchestrator-worker pattern, where a lead agent coordinates the process while delegating to specialized subagents that operate in parallel." — Anthropic Engineering, "How we built our multi-agent research system," Jun 2025</blockquote>
+        <blockquote style="margin:0 0 12px;padding:10px 14px;border-left:3px solid var(--d1);background:var(--card);font-size:0.82rem;color:var(--muted);font-style:italic;">"Our Research system uses a multi-agent architecture with an orchestrator-worker pattern, where a lead agent coordinates the process while delegating to specialized subagents that operate in parallel." — Anthropic Engineering, "How we built our multi-agent research system," Jun 2025</blockquote>
         <svg width="100%" viewBox="0 0 700 620" role="img" aria-label="Domain 1 architecture diagram, redrawn from Anthropic's official multi-agent research system post">
         <defs>
           <marker id="d1arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
@@ -118,7 +120,7 @@
           .d1box{fill:var(--card);stroke:var(--d1);stroke-width:1.3;}
           .d1box-back{fill:var(--card);stroke:var(--line);stroke-width:1;}
           .d1hub{fill:var(--d1);}
-          .d1store{fill:#fff;stroke:var(--muted);stroke-width:1;stroke-dasharray:3 2;}
+          .d1store{fill:var(--card);stroke:var(--muted);stroke-width:1;stroke-dasharray:3 2;}
           .d1t{font-size:13px;fill:var(--ink);font-weight:700;}
           .d1t-w{font-size:13px;fill:#fff;font-weight:700;}
           .d1s{font-size:10.5px;fill:var(--muted);}
@@ -878,7 +880,7 @@
     <div class="domain-body">
 <div class="bigpic">
   <p class="cap">🗺️ <b>Big picture, from the source</b> — grounded in Anthropic’s official Model Context Protocol architecture (client/server tool calls) plus the standard tool-result and escalation patterns from the CCA-F question bank. Click any number to jump to that principle below.</p>
-  <blockquote style="margin:0 0 12px;padding:10px 14px;border-left:3px solid var(--accent);background:#fff;font-size:0.82rem;color:var(--muted);font-style:italic;">"The architecture is straightforward: developers can either expose their data through MCP servers or build AI applications (MCP clients) that connect to these servers." — Anthropic, "Introducing the Model Context Protocol," Nov 2024</blockquote>
+  <blockquote style="margin:0 0 12px;padding:10px 14px;border-left:3px solid var(--accent);background:var(--card);font-size:0.82rem;color:var(--muted);font-style:italic;">"The architecture is straightforward: developers can either expose their data through MCP servers or build AI applications (MCP clients) that connect to these servers." — Anthropic, "Introducing the Model Context Protocol," Nov 2024</blockquote>
   <svg width="100%" viewBox="0 0 800 400" role="img" aria-label="Domain 2 architecture diagram">
 <defs>
           <marker id="d2arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
@@ -1393,7 +1395,7 @@
     <div class="domain-body">
 <div class="bigpic">
   <p class="cap">🗺️ <b>Big picture, from the source</b> — grounded in Anthropic’s official Claude Code best-practices guide (the Explore → Plan → Implement → Commit loop, CLAUDE.md, hooks vs. advisory instructions, subagents). Click any number to jump to that principle below.</p>
-  <blockquote style="margin:0 0 12px;padding:10px 14px;border-left:3px solid var(--accent);background:#fff;font-size:0.82rem;color:var(--muted);font-style:italic;">"Unlike CLAUDE.md instructions which are advisory, hooks are deterministic and guarantee the action happens." — Anthropic, "Best practices for Claude Code"</blockquote>
+  <blockquote style="margin:0 0 12px;padding:10px 14px;border-left:3px solid var(--accent);background:var(--card);font-size:0.82rem;color:var(--muted);font-style:italic;">"Unlike CLAUDE.md instructions which are advisory, hooks are deterministic and guarantee the action happens." — Anthropic, "Best practices for Claude Code"</blockquote>
   <svg width="100%" viewBox="0 0 730 400" role="img" aria-label="Domain 3 architecture diagram">
 <defs>
           <marker id="d3arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
@@ -1940,7 +1942,7 @@
     <div class="domain-body">
 <div class="bigpic">
   <p class="cap">🗺️ <b>Big picture, from the source</b> — grounded in Anthropic’s official structured-outputs and output-consistency documentation (schema-constrained decoding, few-shot examples, retries). Click any number to jump to that principle below.</p>
-  <blockquote style="margin:0 0 12px;padding:10px 14px;border-left:3px solid var(--accent);background:#fff;font-size:0.82rem;color:var(--muted);font-style:italic;">"Structured outputs constrain Claude’s responses to follow a specific schema, ensuring valid, parseable output for downstream processing." — Anthropic, "Structured outputs" documentation</blockquote>
+  <blockquote style="margin:0 0 12px;padding:10px 14px;border-left:3px solid var(--accent);background:var(--card);font-size:0.82rem;color:var(--muted);font-style:italic;">"Structured outputs constrain Claude’s responses to follow a specific schema, ensuring valid, parseable output for downstream processing." — Anthropic, "Structured outputs" documentation</blockquote>
   <svg width="100%" viewBox="0 0 740 400" role="img" aria-label="Domain 4 architecture diagram">
 <defs>
           <marker id="d4arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
@@ -2366,7 +2368,7 @@
     <div class="domain-body">
 <div class="bigpic">
   <p class="cap">🗺️ <b>Big picture, from the source</b> — grounded in Anthropic’s official Batch API and context-window documentation. Only 3 principles here, but they cover 15% of the real exam. Click any number to jump to that principle below.</p>
-  <blockquote style="margin:0 0 12px;padding:10px 14px;border-left:3px solid var(--accent);background:#fff;font-size:0.82rem;color:var(--muted);font-style:italic;">"You can access batch results when all messages have completed or after 24 hours, whichever comes first. Batches expire if processing does not complete within 24 hours." — Anthropic, "Batch processing" documentation</blockquote>
+  <blockquote style="margin:0 0 12px;padding:10px 14px;border-left:3px solid var(--accent);background:var(--card);font-size:0.82rem;color:var(--muted);font-style:italic;">"You can access batch results when all messages have completed or after 24 hours, whichever comes first. Batches expire if processing does not complete within 24 hours." — Anthropic, "Batch processing" documentation</blockquote>
   <svg width="100%" viewBox="0 0 700 140" role="img" aria-label="Domain 5 architecture diagram">
 <defs>
           <marker id="d5arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
@@ -2554,6 +2556,7 @@
 
 <script src="assets/data/questions.js"></script>
 <script src="assets/js/question-links.js"></script>
+<script src="assets/js/theme-toggle.js"></script>
 <script src="assets/js/app.js"></script>
 
 </body>
