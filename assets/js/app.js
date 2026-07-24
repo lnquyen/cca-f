@@ -312,10 +312,89 @@
     });
   }
 
+  function ensureTermTooltip(){
+    var el = document.getElementById('viTooltip');
+    if(!el){
+      el = document.createElement('div');
+      el.id = 'viTooltip';
+      el.setAttribute('role', 'tooltip');
+      document.body.appendChild(el);
+    }
+    return el;
+  }
+
+  var termTooltipShownAt = 0;
+
+  function hideTermTooltip(){
+    var el = document.getElementById('viTooltip');
+    if(el) el.classList.remove('show');
+    document.querySelectorAll('.term.term-open').forEach(function(t){ t.classList.remove('term-open'); });
+  }
+
+  function hideTermTooltipIfSettled(){
+    // ignore scroll/resize events fired as a side effect of just opening the tooltip
+    // (e.g. the browser auto-scrolling a focused element into view, which can
+    // dispatch its 'scroll' event ~200ms after the fact)
+    if(Date.now() - termTooltipShownAt < 500) return;
+    hideTermTooltip();
+  }
+
+  function showTermTooltip(termEl){
+    var text = termEl.getAttribute('data-vi');
+    if(!text) return;
+    var el = ensureTermTooltip();
+    el.textContent = text;
+    el.classList.add('show');
+    termTooltipShownAt = Date.now();
+
+    document.querySelectorAll('.term.term-open').forEach(function(t){ if(t !== termEl) t.classList.remove('term-open'); });
+    termEl.classList.add('term-open');
+
+    var margin = 10;
+    var rect = termEl.getBoundingClientRect();
+    var tw = el.offsetWidth, th = el.offsetHeight;
+    var left = rect.left + rect.width / 2 - tw / 2;
+    left = Math.max(margin, Math.min(left, window.innerWidth - tw - margin));
+    var top = rect.top - th - 10;
+    if(top < margin){ top = rect.bottom + 10; }
+    el.style.left = left + 'px';
+    el.style.top = top + 'px';
+  }
+
+  function wireTermTooltips(){
+    document.querySelectorAll('.term[data-vi]').forEach(function(term){
+      if(term._termWired) return;
+      term._termWired = true;
+      term.setAttribute('role', 'button');
+      term.setAttribute('tabindex', '0');
+      term.setAttribute('aria-label', 'Show Vietnamese translation');
+      term.addEventListener('click', function(e){
+        e.stopPropagation();
+        if(term.classList.contains('term-open')) hideTermTooltip();
+        else showTermTooltip(term);
+      });
+      term.addEventListener('keydown', function(e){
+        if(e.key === 'Enter' || e.key === ' '){
+          e.preventDefault();
+          if(term.classList.contains('term-open')) hideTermTooltip();
+          else showTermTooltip(term);
+        } else if(e.key === 'Escape'){
+          hideTermTooltip();
+        }
+      });
+    });
+  }
+
+  document.addEventListener('click', hideTermTooltip);
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') hideTermTooltip(); });
+  window.addEventListener('scroll', hideTermTooltipIfSettled, true);
+  window.addEventListener('resize', hideTermTooltipIfSettled);
+
   function activateTab(id, opts){
     opts = opts || {};
     var panel = document.getElementById('tab-' + id);
     if(!panel) return;
+    hideTermTooltip();
     document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.toggle('active', p.id === 'tab-' + id); });
     document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.toggle('active', b.getAttribute('data-tab') === id); });
     try{ localStorage.setItem('cca-f-active-tab', id); }catch(e){}
@@ -368,10 +447,12 @@
     if(toggle){
       toggle.addEventListener('change', function(){
         document.body.classList.toggle('hide-vi', !toggle.checked);
+        hideTermTooltip();
       });
     }
 
     wireViIcons();
+    wireTermTooltips();
     initTabs();
   });
 })();

@@ -56,22 +56,38 @@ p.section-desc{color:var(--muted);margin:0 0 18px;}
 .principle h4{display:inline;font-size:0.96rem;}
 .principle p{margin:6px 0 0 34px;font-size:0.87rem;color:var(--ink);}
 
-/* --- bilingual mechanics: word hover + click-to-reveal paragraph translation --- */
-.term{border-bottom:1px dotted var(--accent);cursor:help;position:relative;}
-.term:hover::after{
-  content:attr(data-vi);position:absolute;left:0;bottom:125%;
-  background:#1f1b16;color:#fff;padding:4px 9px;border-radius:6px;
-  font-size:0.72rem;white-space:nowrap;z-index:300;box-shadow:0 2px 8px rgba(0,0,0,.25);
-  max-width:280px; white-space:normal;
+/* --- bilingual mechanics: word tap + click-to-reveal paragraph translation --- */
+.term{border-bottom:1px dotted var(--accent);cursor:pointer;position:relative;-webkit-tap-highlight-color:transparent;}
+.term.term-open{background:#fff3ea;border-radius:4px;box-shadow:0 0 0 1px rgba(217,119,87,0.35);}
+.term:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px;}
+
+#viTooltip{
+  position:fixed;
+  left:0; top:0;
+  max-width:min(300px, calc(100vw - 24px));
+  background:#1f1b16;
+  color:#fff;
+  padding:9px 13px;
+  border-radius:12px;
+  font-size:0.86rem;
+  line-height:1.45;
+  box-shadow:0 10px 28px rgba(0,0,0,.28), 0 2px 6px rgba(0,0,0,.18);
+  z-index:500;
+  opacity:0;
+  transform:translateY(4px) scale(0.97);
+  transition:opacity .14s ease, transform .14s ease;
+  pointer-events:none;
+  visibility:hidden;
 }
+#viTooltip.show{opacity:1;transform:translateY(0) scale(1);visibility:visible;}
+
 .vi-icon{display:inline-block;cursor:pointer;margin-left:6px;font-size:0.82em;opacity:0.75;text-decoration:none;user-select:none;border-radius:50%;}
 .vi-icon:hover{opacity:1;}
 .vi-icon.active{opacity:1;background:#fff3ea;box-shadow:0 0 0 2px var(--accent) inset;}
 .vi-icon:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
 .vi-inline{display:none;margin:6px 0 0;padding:8px 12px;background:#f6f1ea;border-left:3px solid var(--accent);border-radius:0 8px 8px 0;font-size:0.85em;color:var(--ink);}
 .vi-inline.show{display:block;}
-body.hide-vi .term{border-bottom:none;cursor:text;}
-body.hide-vi .term:hover::after{display:none;}
+body.hide-vi .term{border-bottom:none;cursor:text;pointer-events:none;}
 body.hide-vi .vi-icon{display:none;}
 body.hide-vi .vi-inline{display:none !important;}
 
