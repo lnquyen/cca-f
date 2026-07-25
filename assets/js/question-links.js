@@ -15,14 +15,49 @@
     return byPid;
   }
 
+  function makeViButton(text, onToggle){
+    var wrap = document.createElement('span');
+    wrap.className = 'rq-vi-wrap';
+
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'rq-vi-btn';
+    btn.innerHTML = '<svg class="flag-vn" viewBox="0 0 30 20" width="16" height="11" aria-hidden="true"><rect width="30" height="20" fill="#da251d"/><polygon points="15,4 16.76,9.53 22.57,9.53 17.9,13 19.66,18.53 15,15.06 10.34,18.53 12.1,13 7.43,9.53 13.24,9.53" fill="#ffcd00"/></svg> Dịch';
+
+    var box = document.createElement('div');
+    box.className = 'rq-vi-box';
+    box.textContent = text;
+
+    btn.addEventListener('click', function(){
+      var showing = box.classList.toggle('show');
+      btn.classList.toggle('active', showing);
+      if (onToggle) onToggle(showing);
+    });
+
+    wrap.appendChild(btn);
+    wrap.appendChild(box);
+    return wrap;
+  }
+
   function renderQuestionItem(q){
     var letters = Object.keys(q.options).sort();
-    var optsHtml = letters.map(function(letter){
-      return '<li data-letter="' + letter + '">' + escapeHtml(letter) + '. ' + escapeHtml(q.options[letter]) + '</li>';
-    }).join('');
-    var explainText = q.explanation ? q.explanation : ('Correct answer: ' + q.correct + '.');
-    var quizName = q.quizFile.indexOf('practice-exam') > -1 ? 'Practice Exam' : 'Interactive Quiz';
+    var isSetA = q.quizFile.indexOf('practice-exam') > -1;
+    var quizName = isSetA ? 'Practice Exam' : 'Interactive Quiz';
     var focusId = q.uid.replace(/^b\d+-/, '');
+
+    var viSetA = isSetA ? (window.VI_TRANSLATIONS_A || {})[focusId] : null;
+    var viSetB = !isSetA ? (window.VI_TRANSLATIONS_B || {})[focusId] : null;
+    var questionVi = isSetA ? (viSetA ? viSetA.q : '') : (viSetB ? viSetB.q : '');
+    var explanationVi = viSetA ? viSetA.e : '';
+    var optionsVi = isSetA ? (viSetA ? viSetA.o : null) : (viSetB ? viSetB.o : null);
+
+    var explainText = q.explanation ? q.explanation : ('Correct answer: ' + q.correct + '.');
+
+    var optsHtml = letters.map(function(letter){
+      var optVi = optionsVi && optionsVi[letter];
+      var optViHtml = optVi ? '<div class="rq-opt-vi">' + escapeHtml(optVi) + '</div>' : '';
+      return '<li data-letter="' + letter + '">' + escapeHtml(letter) + '. ' + escapeHtml(q.options[letter]) + optViHtml + '</li>';
+    }).join('');
 
     var item = document.createElement('div');
     item.className = 'related-q-item';
@@ -35,6 +70,11 @@
     srcSpan.className = 'rq-src';
     srcSpan.textContent = q.quizLabel;
     qp.appendChild(srcSpan);
+    if (questionVi) {
+      qp.appendChild(makeViButton(questionVi, function(showing){
+        item.querySelectorAll('.rq-opt-vi').forEach(function(el){ el.classList.toggle('show', showing); });
+      }));
+    }
     item.appendChild(qp);
 
     var ul = document.createElement('ul');
@@ -45,6 +85,7 @@
     var explainP = document.createElement('p');
     explainP.className = 'rq-explain';
     explainP.textContent = explainText;
+    if (explanationVi) explainP.appendChild(makeViButton(explanationVi));
     item.appendChild(explainP);
 
     var revealBtn = document.createElement('button');
