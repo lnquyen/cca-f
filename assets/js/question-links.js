@@ -15,6 +15,65 @@
     return byPid;
   }
 
+  // The practice-exam (77-question) bank and the interactive-quiz (147-question)
+  // bank share a lot of the same underlying questions with shuffled option order
+  // and light rewording. Compare normalized bigrams so near-identical questions
+  // cluster together instead of showing up twice under "Related questions".
+  function normalizeForCompare(text){
+    return String(text).toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+  }
+
+  function bigrams(text){
+    var s = normalizeForCompare(text);
+    var grams = [];
+    for (var i = 0; i < s.length - 1; i++) grams.push(s.substr(i, 2));
+    return grams;
+  }
+
+  function diceSimilarity(a, b){
+    var ga = bigrams(a), gb = bigrams(b);
+    if (!ga.length || !gb.length) return ga.length === gb.length ? 1 : 0;
+    var counts = {};
+    ga.forEach(function(g){ counts[g] = (counts[g] || 0) + 1; });
+    var intersection = 0;
+    gb.forEach(function(g){ if (counts[g] > 0) { intersection++; counts[g]--; } });
+    return (2 * intersection) / (ga.length + gb.length);
+  }
+
+  var DUPLICATE_SIMILARITY_THRESHOLD = 0.85;
+
+  function clusterDuplicates(qs){
+    var parent = qs.map(function(_, i){ return i; });
+    function find(i){ return parent[i] === i ? i : (parent[i] = find(parent[i])); }
+    function union(i, j){ parent[find(i)] = find(j); }
+
+    for (var i = 0; i < qs.length; i++){
+      for (var j = i + 1; j < qs.length; j++){
+        if (diceSimilarity(qs[i].question, qs[j].question) >= DUPLICATE_SIMILARITY_THRESHOLD) union(i, j);
+      }
+    }
+
+    var groups = {};
+    qs.forEach(function(q, i){
+      var root = find(i);
+      (groups[root] = groups[root] || []).push(q);
+    });
+
+    return Object.keys(groups).map(function(root){
+      var members = groups[root];
+      var primary = members.filter(function(q){ return q.quizFile.indexOf('practice-exam') > -1; })[0] || members[0];
+      var sources = members.slice().sort(function(a, b){
+        var aExam = a.quizFile.indexOf('practice-exam') > -1;
+        var bExam = b.quizFile.indexOf('practice-exam') > -1;
+        if (aExam !== bExam) return aExam ? -1 : 1;
+        var aNum = parseInt((a.quizLabel.match(/(\d+)$/) || [0, 0])[1], 10);
+        var bNum = parseInt((b.quizLabel.match(/(\d+)$/) || [0, 0])[1], 10);
+        return aNum - bNum;
+      });
+      return { primary: primary, sources: sources };
+    });
+  }
+
   function makeViButton(text, onToggle){
     var wrap = document.createElement('span');
     wrap.className = 'rq-vi-wrap';
@@ -39,10 +98,11 @@
     return wrap;
   }
 
-  function renderQuestionItem(q){
+  function renderQuestionItem(cluster){
+    var q = cluster.primary;
+    var sources = cluster.sources;
     var letters = Object.keys(q.options).sort();
     var isSetA = q.quizFile.indexOf('practice-exam') > -1;
-    var quizName = isSetA ? 'Practice Exam' : 'Interactive Quiz';
     var focusId = q.uid.replace(/^b\d+-/, '');
 
     var viSetA = isSetA ? (window.VI_TRANSLATIONS_A || {})[focusId] : null;
@@ -68,7 +128,7 @@
     qp.textContent = q.question;
     var srcSpan = document.createElement('span');
     srcSpan.className = 'rq-src';
-    srcSpan.textContent = q.quizLabel;
+    srcSpan.textContent = sources.map(function(s){ return s.quizLabel; }).join(', ');
     qp.appendChild(srcSpan);
     if (questionVi) {
       qp.appendChild(makeViButton(questionVi, function(showing){
@@ -101,14 +161,27 @@
     });
     item.appendChild(revealBtn);
 
-    var openLink = document.createElement('a');
-    openLink.href = q.quizFile + '?focus=' + encodeURIComponent(focusId);
-    openLink.target = '_blank';
-    openLink.rel = 'noopener';
-    openLink.textContent = 'Open in ' + quizName + ' ↗';
-    openLink.style.marginLeft = '8px';
-    openLink.style.fontSize = '0.78rem';
-    item.appendChild(openLink);
+    sources.forEach(function(src, idx){
+      var srcFocusId = src.uid.replace(/^b\d+-/, '');
+      if (idx > 0) {
+        var sep = document.createElement('span');
+        sep.style.fontSize = '0.78rem';
+        sep.style.margin = '0 4px';
+        sep.textContent = '·';
+        item.appendChild(sep);
+      }
+      var openLink = document.createElement('a');
+      openLink.href = src.quizFile + '?focus=' + encodeURIComponent(srcFocusId);
+      openLink.target = '_blank';
+      openLink.rel = 'noopener';
+      // include the quiz label (not just the quiz name) so multiple sources
+      // from the same quiz file — e.g. two Interactive Quiz duplicates — are
+      // still distinguishable from one another
+      openLink.textContent = 'Open in ' + src.quizLabel + ' ↗';
+      if (idx === 0) openLink.style.marginLeft = '8px';
+      openLink.style.fontSize = '0.78rem';
+      item.appendChild(openLink);
+    });
 
     return item;
   }
@@ -130,11 +203,13 @@
         return;
       }
 
+      var clusters = clusterDuplicates(qs);
+
       var details = document.createElement('details');
       details.className = 'related-q';
 
       var summary = document.createElement('summary');
-      summary.innerHTML = 'Related questions <span class="count">' + qs.length + '</span>';
+      summary.innerHTML = 'Related questions <span class="count">' + clusters.length + '</span>';
       details.appendChild(summary);
 
       var body = document.createElement('div');
@@ -144,7 +219,7 @@
       var built = false;
       details.addEventListener('toggle', function(){
         if (details.open && !built) {
-          qs.forEach(function(q){ body.appendChild(renderQuestionItem(q)); });
+          clusters.forEach(function(c){ body.appendChild(renderQuestionItem(c)); });
           built = true;
         }
       });
