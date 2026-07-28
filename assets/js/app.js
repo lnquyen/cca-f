@@ -443,14 +443,6 @@
   document.addEventListener('DOMContentLoaded', function(){
     document.querySelectorAll('.glossary-zone').forEach(function(el){ wrapTerms(el); });
 
-    var toggle = document.getElementById('viToggle');
-    if(toggle){
-      toggle.addEventListener('change', function(){
-        document.body.classList.toggle('hide-vi', !toggle.checked);
-        hideTermTooltip();
-      });
-    }
-
     wireViIcons();
     wireTermTooltips();
     initTabs();

@@ -126,9 +126,6 @@ p.section-desc{color:var(--muted);margin:0 0 18px;}
 .vi-icon:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
 .vi-inline{display:none;margin:6px 0 0;padding:8px 12px;background:var(--surface);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;font-size:0.85em;color:var(--ink);}
 .vi-inline.show{display:block;}
-body.hide-vi .term{border-bottom:none;cursor:text;pointer-events:none;}
-body.hide-vi .vi-icon{display:none;}
-body.hide-vi .vi-inline{display:none !important;}
 
 html{scroll-behavior:smooth;}
 .principle:target{background:var(--highlight);border-radius:10px;box-shadow:0 0 0 2px var(--accent) inset;}
