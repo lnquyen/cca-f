@@ -407,7 +407,7 @@
     var navToggleLabel = document.getElementById('navToggleLabel');
     var navToggle = document.getElementById('navToggle');
     var tocNav = document.getElementById('tocNav');
-    if(navToggleLabel && activeBtn) navToggleLabel.textContent = activeBtn.textContent;
+    if(navToggleLabel && activeBtn) navToggleLabel.textContent = activeBtn.getAttribute('data-label') || activeBtn.textContent;
     if(tocNav) tocNav.classList.remove('open');
     if(navToggle) navToggle.setAttribute('aria-expanded', 'false');
 

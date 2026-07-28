@@ -1179,7 +1179,7 @@ function renderQuestions(){
       const qViWrap = document.createElement('div');
       qViWrap.className = 'vi-wrap';
       qViWrap.innerHTML =
-        '<button type="button" class="vi-btn" data-scope="question" data-target="vi-q-' + q.id + '"><svg class="flag-vn" viewBox="0 0 30 20" width="16" height="11" aria-hidden="true"><rect width="30" height="20" fill="#da251d"/><polygon points="15,4 16.76,9.53 22.57,9.53 17.9,13 19.66,18.53 15,15.06 10.34,18.53 12.1,13 7.43,9.53 13.24,9.53" fill="#ffcd00"/></svg> Dịch</button>' +
+        '<button type="button" class="vi-btn" data-scope="question" data-target="vi-q-' + q.id + '"><svg class="flag-vn" viewBox="0 0 30 20" width="16" height="11" aria-hidden="true"><rect width="30" height="20" fill="#da251d"/><polygon points="15,4 16.76,9.53 22.57,9.53 17.9,13 19.66,18.53 15,15.06 10.34,18.53 12.1,13 7.43,9.53 13.24,9.53" fill="#ffcd00"/></svg> VN</button>' +
         '<div class="vi-box" id="vi-q-' + q.id + '">' + escapeHtml(q.question_vi) + '</div>';
       card.appendChild(qViWrap);
     }
@@ -1237,7 +1237,7 @@ function renderQuestions(){
         '<div class="verdict">' + verdictText + '</div>' +
         '<div class="explain">' + escapeHtml(q.explanation) + '</div>' +
         (q.explanation_vi ?
-          '<button type="button" class="vi-btn" data-target="vi-e-' + q.id + '"><svg class="flag-vn" viewBox="0 0 30 20" width="16" height="11" aria-hidden="true"><rect width="30" height="20" fill="#da251d"/><polygon points="15,4 16.76,9.53 22.57,9.53 17.9,13 19.66,18.53 15,15.06 10.34,18.53 12.1,13 7.43,9.53 13.24,9.53" fill="#ffcd00"/></svg> Dịch</button>' +
+          '<button type="button" class="vi-btn" data-target="vi-e-' + q.id + '"><svg class="flag-vn" viewBox="0 0 30 20" width="16" height="11" aria-hidden="true"><rect width="30" height="20" fill="#da251d"/><polygon points="15,4 16.76,9.53 22.57,9.53 17.9,13 19.66,18.53 15,15.06 10.34,18.53 12.1,13 7.43,9.53 13.24,9.53" fill="#ffcd00"/></svg> VN</button>' +
           '<div class="vi-box" id="vi-e-' + q.id + '">' + escapeHtml(q.explanation_vi) + '</div>'
           : '');
       card.appendChild(fb);

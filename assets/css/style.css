@@ -52,23 +52,24 @@ nav.toc .tab-btn.active{background:var(--tab-c);border-color:var(--tab-c);color:
 @keyframes tabin{from{opacity:0;} to{opacity:1;}}
 .hint-toggle{display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:5px 10px;font-weight:600;cursor:pointer;}
 
-.nav-toggle{display:none;}
+.nav-toggle-group{display:none;}
 
 /* Mobile: the 10-button nav wrapping onto 3+ rows ate a huge chunk of the
-   screen (sticky header). Collapse it behind a "current tab ▾" button that
-   expands into the full list instead of always showing every tab. */
+   screen (sticky header). Collapse it behind a Menu button (with the current
+   tab named alongside it) that expands into the full list on tap. */
 @media(max-width:640px){
   header.top{padding:10px 14px;}
-  header.top .inner{flex-wrap:nowrap;align-items:flex-start;gap:8px;}
-  header.top .inner>div:first-child{flex-shrink:1;min-width:0;}
+  header.top .inner{flex-wrap:wrap;align-items:flex-start;gap:8px;}
+  header.top .inner>div:first-child{flex:1 1 auto;min-width:0;}
   header.top h1{font-size:0.9rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-  header.top .sub{display:none;}
+  header.top .sub{font-size:0.68rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 
-  .nav-toggle{display:flex;align-items:center;gap:6px;flex-shrink:0;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:6px 12px;font-weight:700;font-size:0.82rem;color:var(--ink);cursor:pointer;font-family:inherit;}
-  .nav-toggle .chev{font-size:0.7em;transition:transform .15s ease;}
-  .nav-toggle[aria-expanded="true"] .chev{transform:rotate(180deg);}
+  .nav-toggle-group{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+  .current-tab-label{font-weight:700;font-size:0.82rem;color:var(--accent);}
+  .nav-toggle{display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:6px 12px;font-weight:700;font-size:0.82rem;color:var(--ink);cursor:pointer;font-family:inherit;}
+  .nav-toggle .hamburger{font-size:0.95em;line-height:1;}
 
-  nav.toc{display:none;flex-basis:100%;width:100%;flex-wrap:wrap;margin-top:10px;}
+  nav.toc{display:none;flex-basis:100%;width:100%;flex-wrap:wrap;justify-content:flex-start;margin-top:10px;padding-top:10px;border-top:1px solid var(--line);}
   nav.toc.open{display:flex;}
 }
 
@@ -140,9 +141,10 @@ p.section-desc{color:var(--muted);margin:0 0 18px;}
 }
 #viTooltip.show{opacity:1;transform:translateY(0) scale(1);visibility:visible;}
 
-.vi-icon{display:inline-block;cursor:pointer;margin-left:6px;font-size:0.82em;opacity:0.75;text-decoration:none;user-select:none;border-radius:50%;}
-.vi-icon:hover{opacity:1;}
-.vi-icon.active{opacity:1;background:var(--highlight);box-shadow:0 0 0 2px var(--accent) inset;}
+.vi-icon{display:inline-flex;align-items:center;gap:3px;cursor:pointer;margin-left:6px;padding:1px 7px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--accent);font-size:0.68em;font-weight:700;text-decoration:none;user-select:none;vertical-align:middle;}
+.vi-icon::before{content:"";display:inline-block;flex-shrink:0;width:13px;height:9px;border-radius:2px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 20'%3E%3Crect width='30' height='20' fill='%23da251d'/%3E%3Cpolygon points='15,4 16.76,9.53 22.57,9.53 17.9,13 19.66,18.53 15,15.06 10.34,18.53 12.1,13 7.43,9.53 13.24,9.53' fill='%23ffcd00'/%3E%3C/svg%3E");background-size:contain;background-repeat:no-repeat;}
+.vi-icon:hover{background:var(--highlight);}
+.vi-icon.active{background:var(--accent);color:#fff;border-color:var(--accent);}
 .vi-icon:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
 .vi-inline{display:none;margin:6px 0 0;padding:8px 12px;background:var(--surface);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;font-size:0.85em;color:var(--ink);}
 .vi-inline.show{display:block;}
