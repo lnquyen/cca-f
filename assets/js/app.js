@@ -396,8 +396,21 @@
     if(!panel) return;
     hideTermTooltip();
     document.querySelectorAll('.tab-panel').forEach(function(p){ p.classList.toggle('active', p.id === 'tab-' + id); });
-    document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.toggle('active', b.getAttribute('data-tab') === id); });
+    var activeBtn = null;
+    document.querySelectorAll('.tab-btn').forEach(function(b){
+      var isActive = b.getAttribute('data-tab') === id;
+      b.classList.toggle('active', isActive);
+      if(isActive) activeBtn = b;
+    });
     try{ localStorage.setItem('cca-f-active-tab', id); }catch(e){}
+
+    var navToggleLabel = document.getElementById('navToggleLabel');
+    var navToggle = document.getElementById('navToggle');
+    var tocNav = document.getElementById('tocNav');
+    if(navToggleLabel && activeBtn) navToggleLabel.textContent = activeBtn.textContent;
+    if(tocNav) tocNav.classList.remove('open');
+    if(navToggle) navToggle.setAttribute('aria-expanded', 'false');
+
     if(!opts.silent){
       var wrap = document.querySelector('.wrap');
       if(wrap) wrap.scrollIntoView({behavior:'smooth', block:'start'});
@@ -409,6 +422,15 @@
     document.querySelectorAll('.tab-btn').forEach(function(btn){
       btn.addEventListener('click', function(){ activateTab(btn.getAttribute('data-tab')); });
     });
+
+    var navToggle = document.getElementById('navToggle');
+    var tocNav = document.getElementById('tocNav');
+    if(navToggle && tocNav){
+      navToggle.addEventListener('click', function(){
+        var open = tocNav.classList.toggle('open');
+        navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+    }
 
     var initial = 'plan';
     var hash = location.hash.replace('#', '');

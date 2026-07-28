@@ -52,6 +52,26 @@ nav.toc .tab-btn.active{background:var(--tab-c);border-color:var(--tab-c);color:
 @keyframes tabin{from{opacity:0;} to{opacity:1;}}
 .hint-toggle{display:flex;align-items:center;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:5px 10px;font-weight:600;cursor:pointer;}
 
+.nav-toggle{display:none;}
+
+/* Mobile: the 10-button nav wrapping onto 3+ rows ate a huge chunk of the
+   screen (sticky header). Collapse it behind a "current tab ▾" button that
+   expands into the full list instead of always showing every tab. */
+@media(max-width:640px){
+  header.top{padding:10px 14px;}
+  header.top .inner{flex-wrap:nowrap;align-items:flex-start;gap:8px;}
+  header.top .inner>div:first-child{flex-shrink:1;min-width:0;}
+  header.top h1{font-size:0.9rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  header.top .sub{display:none;}
+
+  .nav-toggle{display:flex;align-items:center;gap:6px;flex-shrink:0;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:6px 12px;font-weight:700;font-size:0.82rem;color:var(--ink);cursor:pointer;font-family:inherit;}
+  .nav-toggle .chev{font-size:0.7em;transition:transform .15s ease;}
+  .nav-toggle[aria-expanded="true"] .chev{transform:rotate(180deg);}
+
+  nav.toc{display:none;flex-basis:100%;width:100%;flex-wrap:wrap;margin-top:10px;}
+  nav.toc.open{display:flex;}
+}
+
 h2.section-title{font-size:1.5rem;margin:40px 0 6px;}
 p.section-desc{color:var(--muted);margin:0 0 18px;}
 
