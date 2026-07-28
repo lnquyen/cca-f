@@ -66,11 +66,11 @@ p.section-desc{color:var(--muted);margin:0 0 18px;}
 
 .plan-grid{display:grid;grid-template-columns:1fr;gap:14px;}
 @media(min-width:760px){.plan-grid{grid-template-columns:1fr 1fr 1fr;}}
-.day-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;border-top:5px solid var(--accent);}
-.day-card h3{margin:0 0 4px;font-size:1.02rem;}
-.day-card .date{color:var(--muted);font-size:0.76rem;margin-bottom:10px;}
-.day-card ul{margin:0;padding-left:18px;font-size:0.86rem;}
-.day-card li{margin-bottom:9px;}
+.phase-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;border-top:5px solid var(--accent);}
+.phase-card h3{margin:0 0 4px;font-size:1.02rem;}
+.phase-card .focus{color:var(--muted);font-size:0.76rem;margin-bottom:10px;}
+.phase-card ul{margin:0;padding-left:18px;font-size:0.86rem;}
+.phase-card li{margin-bottom:9px;}
 
 .domain-block{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);margin-bottom:20px;overflow:hidden;}
 .domain-head{padding:16px 20px;border-left:6px solid var(--accent);}
