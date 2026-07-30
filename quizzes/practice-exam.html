@@ -673,6 +673,22 @@
   }
   .vi-btn:hover{ background:var(--surface-hover); }
   .vi-btn.active{ background:var(--accent); color:var(--accent-ink); border-color:var(--accent); }
+  .copy-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    margin-top:6px;
+    padding:3px 10px;
+    border-radius:999px;
+    border:1px solid var(--line);
+    background:var(--surface-2);
+    color:var(--muted);
+    font-size:0.72rem;
+    font-weight:700;
+    cursor:pointer;
+    user-select:none;
+  }
+  .copy-btn:hover{ background:var(--surface-hover); border-color:var(--accent); color:var(--accent); }
   .vi-box{
     display:none;
     margin-top:8px;
@@ -1172,7 +1188,8 @@ function renderQuestions(){
         '<span class="domain-fullname">' + escapeHtml(DOMAIN_NAMES[q.domain]) + '</span>' +
         '<span class="qstatus ' + statusClass + '">' + statusText + '</span>' +
       '</div>' +
-      '<span class="qtext">' + escapeHtml(q.question) + '</span>';
+      '<span class="qtext">' + escapeHtml(q.question) + '</span>' +
+      '<button type="button" class="copy-btn" data-copy="' + escapeHtml(q.question + '\n\n' + q.options.map(o => o.display + '. ' + o.text).join('\n')) + '">📋 Copy</button>';
     card.appendChild(qhead);
 
     if(q.question_vi){
@@ -1339,7 +1356,38 @@ function render(){
   updateScorebar();
 }
 
+function copyTextToClipboard(text, onDone){
+  function legacyCopy(){
+    let ok = false;
+    try{
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      ok = document.execCommand('copy');
+      document.body.removeChild(ta);
+    } catch(e){ ok = false; }
+    onDone(ok);
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => onDone(true), legacyCopy);
+  } else {
+    legacyCopy();
+  }
+}
+
 document.getElementById('quizContainer').addEventListener('click', (e) => {
+  const copyBtn = e.target.closest('.copy-btn');
+  if(copyBtn){
+    copyTextToClipboard(copyBtn.dataset.copy, (ok) => {
+      copyBtn.textContent = ok ? '✓ Copied' : '✗ Failed';
+      setTimeout(() => { copyBtn.textContent = '📋 Copy'; }, 1300);
+    });
+    return;
+  }
   const btn = e.target.closest('.vi-btn');
   if(!btn) return;
   const box = document.getElementById(btn.dataset.target);

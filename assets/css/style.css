@@ -201,6 +201,8 @@ footer{text-align:center;color:var(--muted);font-size:0.78rem;margin-top:40px;}
 .related-q-item .rq-reveal{background:none;border:1px solid var(--line);border-radius:14px;padding:2px 10px;font-size:0.74rem;cursor:pointer;color:var(--ink);font-weight:600;}
 .related-q-item .rq-reveal:hover{border-color:var(--accent);}
 .related-q-item .rq-src{color:var(--muted);font-weight:500;font-size:0.72rem;margin-left:6px;}
+.rq-copy-btn{background:none;border:1px solid var(--line);border-radius:14px;padding:1px 8px;font-size:0.7rem;cursor:pointer;color:var(--muted);font-weight:600;margin-left:6px;vertical-align:middle;}
+.rq-copy-btn:hover{border-color:var(--accent);color:var(--accent);}
 .related-q-empty{font-size:0.78rem;color:var(--muted);margin:8px 0 0 34px;font-style:italic;}
 
 .rq-vi-wrap{display:inline-block;margin-left:6px;}

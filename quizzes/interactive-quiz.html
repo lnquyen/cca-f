@@ -305,6 +305,22 @@
   }
   .vi-btn:hover { background: var(--panel-2); }
   .vi-btn.active { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .copy-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin: -6px 0 16px 6px;
+    padding: 4px 11px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--panel-3);
+    color: var(--muted);
+    font-size: 12.5px;
+    font-weight: 700;
+    cursor: pointer;
+    user-select: none;
+  }
+  .copy-btn:hover { background: var(--panel-2); border-color: var(--accent); color: var(--accent); }
   .vi-box {
     display: none;
     margin: -8px 0 18px;
@@ -592,6 +608,7 @@
     <div class="qnum-badge" id="qnum-badge">QUESTION 1</div>
     <p class="question-text" id="question-text"></p>
     <button type="button" class="vi-btn" id="q-vi-btn"><svg class="flag-vn" viewBox="0 0 30 20" width="16" height="11" aria-hidden="true"><rect width="30" height="20" fill="#da251d"/><polygon points="15,4 16.76,9.53 22.57,9.53 17.9,13 19.66,18.53 15,15.06 10.34,18.53 12.1,13 7.43,9.53 13.24,9.53" fill="#ffcd00"/></svg> VN</button>
+    <button type="button" class="copy-btn" id="q-copy-btn">📋 Copy</button>
     <div class="vi-box" id="q-vi-box"></div>
     <div class="options" id="options-container"></div>
 
@@ -707,6 +724,7 @@
   const feedbackBanner = document.getElementById('feedback-banner');
   const qViBtn = document.getElementById('q-vi-btn');
   const qViBox = document.getElementById('q-vi-box');
+  const qCopyBtn = document.getElementById('q-copy-btn');
   const prevBtn = document.getElementById('prev-btn');
   const nextBtn = document.getElementById('next-btn');
   const progressText = document.getElementById('progress-text');
@@ -818,6 +836,38 @@
     const showing = qViBox.classList.toggle('show');
     qViBtn.classList.toggle('active', showing);
     optionsContainer.querySelectorAll('.opt-vi').forEach(el => el.classList.toggle('show', showing));
+  });
+
+  function copyTextToClipboard(text, onDone){
+    function legacyCopy(){
+      let ok = false;
+      try{
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.focus();
+        ta.select();
+        ok = document.execCommand('copy');
+        document.body.removeChild(ta);
+      } catch(e){ ok = false; }
+      onDone(ok);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(() => onDone(true), legacyCopy);
+    } else {
+      legacyCopy();
+    }
+  }
+
+  qCopyBtn.addEventListener('click', () => {
+    const q = activeSet[currentIndex];
+    const copyText = q.question + '\n\n' + Object.keys(q.options).sort().map(letter => letter + '. ' + q.options[letter]).join('\n');
+    copyTextToClipboard(copyText, (ok) => {
+      qCopyBtn.textContent = ok ? '✓ Copied' : '✗ Failed';
+      setTimeout(() => { qCopyBtn.textContent = '📋 Copy'; }, 1300);
+    });
   });
 
   prevBtn.addEventListener('click', () => {

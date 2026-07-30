@@ -74,6 +74,44 @@
     });
   }
 
+  function copyTextToClipboard(text, onDone){
+    function legacyCopy(){
+      var ok = false;
+      try{
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.focus();
+        ta.select();
+        ok = document.execCommand('copy');
+        document.body.removeChild(ta);
+      } catch(e){ ok = false; }
+      onDone(ok);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function(){ onDone(true); }, legacyCopy);
+    } else {
+      legacyCopy();
+    }
+  }
+
+  function makeCopyButton(text){
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'rq-copy-btn';
+    btn.textContent = '📋 Copy';
+    btn.addEventListener('click', function(e){
+      e.stopPropagation();
+      copyTextToClipboard(text, function(ok){
+        btn.textContent = ok ? '✓ Copied' : '✗ Failed';
+        setTimeout(function(){ btn.textContent = '📋 Copy'; }, 1300);
+      });
+    });
+    return btn;
+  }
+
   function makeViButton(text, onToggle){
     var wrap = document.createElement('span');
     wrap.className = 'rq-vi-wrap';
@@ -135,6 +173,10 @@
         item.querySelectorAll('.rq-opt-vi').forEach(function(el){ el.classList.toggle('show', showing); });
       }));
     }
+    var copyText = q.question + '\n\n' + letters.map(function(letter){
+      return letter + '. ' + q.options[letter];
+    }).join('\n');
+    qp.appendChild(makeCopyButton(copyText));
     item.appendChild(qp);
 
     var ul = document.createElement('ul');
